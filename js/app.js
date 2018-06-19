@@ -2,6 +2,13 @@ const $player1 = $('#player1');
 const $player2 = $('#player2');
 const $startButton = $('#start .button');
 const $restartButton = $('#finish .button');
+
+let $randomNumber;
+	function random(){
+		$randomNumber = Math.floor( Math.random() * 9);
+			return $randomNumber;
+		}
+
 // show start screen and hide the board
 $('.screen-start').show();
 $('.board').hide();
@@ -48,14 +55,32 @@ $('.boxes').on('click', function(event) {
 		$(event.target).addClass('box-filled-1');
 		$player1.toggleClass('active');
 		$player2.toggleClass('active');
-	} else if ($player2.hasClass('active') && !$(event.target).hasClass('box-filled-1') && !$(event.target).hasClass('box-filled-2')) {
-		$(event.target).addClass('box-filled-2');
-		$player2.toggleClass('active');
-		$player1.toggleClass('active');
-		if ($(event.target).hasClass('box-filled-1') || $(event.target).hasClass('box-filled-2')) {
-			$(event.target).addClass('');
-		}
-	}
+
+			console.log(random());
+}
+
+// ----------------DOUBT-------------------------------------
+
+	if($('.boxes li').eq($randomNumber).hasClass('box-filled-1') || $('.boxes li').eq($randomNumber).hasClass('box-filled-2')){
+
+			console.log(random());
+
+} else {
+					// $('.boxes li').eq($randomNumber).addClass('');
+
+			$('.boxes li').eq($randomNumber).addClass('box-filled-2')
+				$player2.toggleClass('active');
+				$player1.toggleClass('active');
+}
+
+
+// 	if ($(event.target).hasClass('box-filled-1') || $(event.target).hasClass('box-filled-2')) {
+// 		$(event.target).addClass('');
+// }
+
+
+
+
 	//combinations to win
 	const arrayWin = [
 		[0, 1, 2], //arrayWin[0]
