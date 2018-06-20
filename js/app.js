@@ -83,6 +83,9 @@ console.log($('.taken').length);
 		[2, 4, 6],
 		[0, 4, 8],
 	];
+
+	let p1;
+	let p2;
 	//behavior for winner 1.
 	function checkP1(i) {
 		const $proofP1 = $boxes.eq(arrayWin[i][0]).hasClass('box-filled-1') &&
@@ -91,13 +94,15 @@ console.log($('.taken').length);
 		return $proofP1;
 	}
 	for (let i = 0; i < arrayWin.length; i += 1) {
-		checkP1(i);
-		if (checkP1(i) === true) {
+		p1 = checkP1(i);
+		if (p1 === true && !p2 === true) {
 			$('#finish').addClass('screen-win-one').show();
 			$('.board').hide();
 			$('.message').html('Winner!');
+			$('#finish').removeClass('screen-win-two');
+			$('#finish').removeClass('screen-win-tie');
 		}
-		console.log(checkP1(i) === true);
+		console.log(p1 === true);
 	}
 	//behavior for winner 2.
 	function checkP2(i) {
@@ -107,21 +112,25 @@ console.log($('.taken').length);
 		return $proofP2;
 	}
 	for (let i = 0; i < arrayWin.length; i += 1) {
-		checkP2(i);
-		if (checkP2(i) === true) {
+		p2 = checkP2(i);
+		if (p2 === true && !p1 === true) {
 			$('#finish').addClass('screen-win-two').show();
 			$('.board').hide();
 			$('.message').html('Winner!');
+			$('#finish').removeClass('screen-win-one');
+			$('#finish').removeClass('screen-win-tie');
 		}
-		console.log(checkP2(i) === true);
+		console.log(p2 === true);
 	}
 
-if ($('.box-filled-1').length === 5){
-	 $('#finish').addClass('screen-win-tie').show();
-	 $('.board').hide();
-	 $('.message').html("It's a tie!");
+if ($('.box-filled-1').length === 5 && !p1 === true && !p2 === true ){
+		 $('#finish').addClass('screen-win-tie').show();
+		 $('.board').hide();
+		 $('.message').html("It's a tie!");
+		 $('#finish').removeClass('screen-win-one');
+		 $('#finish').removeClass('screen-win-two');
 	}
-		console.log($('.box-filled-1').length === 5);
+		console.log($('.box-filled-1').length === 5 && !p1 === true && !p2 === true);
 
 
 });
