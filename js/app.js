@@ -2,13 +2,7 @@ const $player1 = $('#player1');
 const $player2 = $('#player2');
 const $startButton = $('#start .button');
 const $restartButton = $('#finish .button');
-
-let $randomNumber;
-	function random(){
-		$randomNumber = Math.floor( Math.random() * 9);
-			return $randomNumber;
-		}
-
+const $boxes = $('.boxes li');
 // show start screen and hide the board
 $('.screen-start').show();
 $('.board').hide();
@@ -51,36 +45,33 @@ $('.boxes').on('mouseout', function(event) {
 });
 //behavior on clicking squares, empty and ocuppied.
 $('.boxes').on('click', function(event) {
+
 	if ($player1.hasClass('active') && !$(event.target).hasClass('box-filled-1') && !$(event.target).hasClass('box-filled-2')) {
 		$(event.target).addClass('box-filled-1');
+		$(event.target).addClass('taken');
 		$player1.toggleClass('active');
 		$player2.toggleClass('active');
 
-			console.log(random());
+		function randomNumber(){
+			return Math.floor( Math.random() * 9);
+		}
+
+		let random = randomNumber();
+		while ( ($boxes.eq(random).hasClass('box-filled-1') || $boxes.eq(random).hasClass('box-filled-2')) && $('.taken').length <= 7 ){
+				random = randomNumber();
+
+
+	}
+
+	if($('.taken').length <= 7) {
+		$boxes.eq(random).addClass('box-filled-2');
+		$boxes.eq(random).addClass('taken');
+		$player2.toggleClass('active');
+		$player1.toggleClass('active');
+	}
+
 }
-
-// ----------------DOUBT-------------------------------------
-
-	if($('.boxes li').eq($randomNumber).hasClass('box-filled-1') || $('.boxes li').eq($randomNumber).hasClass('box-filled-2')){
-
-			console.log(random());
-
-} else {
-					// $('.boxes li').eq($randomNumber).addClass('');
-
-			$('.boxes li').eq($randomNumber).addClass('box-filled-2')
-				$player2.toggleClass('active');
-				$player1.toggleClass('active');
-}
-
-
-// 	if ($(event.target).hasClass('box-filled-1') || $(event.target).hasClass('box-filled-2')) {
-// 		$(event.target).addClass('');
-// }
-
-
-
-
+console.log($('.taken').length);
 	//combinations to win
 	const arrayWin = [
 		[0, 1, 2], //arrayWin[0]
@@ -94,9 +85,9 @@ $('.boxes').on('click', function(event) {
 	];
 	//behavior for winner 1.
 	function checkP1(i) {
-		const $proofP1 = $('.boxes li').eq(arrayWin[i][0]).hasClass('box-filled-1') &&
-                     $('.boxes li').eq(arrayWin[i][1]).hasClass('box-filled-1') &&
-                     $('.boxes li').eq(arrayWin[i][2]).hasClass('box-filled-1');
+		const $proofP1 = $boxes.eq(arrayWin[i][0]).hasClass('box-filled-1') &&
+                     $boxes.eq(arrayWin[i][1]).hasClass('box-filled-1') &&
+                     $boxes.eq(arrayWin[i][2]).hasClass('box-filled-1');
 		return $proofP1;
 	}
 	for (let i = 0; i < arrayWin.length; i += 1) {
@@ -105,18 +96,14 @@ $('.boxes').on('click', function(event) {
 			$('#finish').addClass('screen-win-one').show();
 			$('.board').hide();
 			$('.message').html('Winner!');
-			//it's a tie.
-		} else if ($('.box-filled-1').length === 5) {
-			$('#finish').addClass('screen-win-tie').show();
-			$('.board').hide();
-			$('.message').html("It's a tie!");
 		}
+		console.log(checkP1(i) === true);
 	}
 	//behavior for winner 2.
 	function checkP2(i) {
-		const $proofP2 = $('.boxes li').eq(arrayWin[i][0]).hasClass('box-filled-2') &&
-                     $('.boxes li').eq(arrayWin[i][1]).hasClass('box-filled-2') &&
-                     $('.boxes li').eq(arrayWin[i][2]).hasClass('box-filled-2');
+		const $proofP2 = $boxes.eq(arrayWin[i][0]).hasClass('box-filled-2') &&
+                     $boxes.eq(arrayWin[i][1]).hasClass('box-filled-2') &&
+                     $boxes.eq(arrayWin[i][2]).hasClass('box-filled-2');
 		return $proofP2;
 	}
 	for (let i = 0; i < arrayWin.length; i += 1) {
@@ -126,12 +113,26 @@ $('.boxes').on('click', function(event) {
 			$('.board').hide();
 			$('.message').html('Winner!');
 		}
+		console.log(checkP2(i) === true);
 	}
+
+if ($('.box-filled-1').length === 5){
+	 $('#finish').addClass('screen-win-tie').show();
+	 $('.board').hide();
+	 $('.message').html("It's a tie!");
+	}
+		console.log($('.box-filled-1').length === 5);
+
+
 });
 //the game is over, let's start again.
 // so let's remove all the classes created.
 $($restartButton).click(() => {
 	$('#finish').hide();
+	$('#finish').removeClass('box-filled-one');
+	$('#finish').removeClass('box-filled-two');
+	$('#finish').removeClass('box-filled-tie');
+
 	$('.board').show();
 	// first turn is fot the player1
 	$($player1).addClass('active');
@@ -139,5 +140,6 @@ $($restartButton).click(() => {
 	$('.box').each(function() {
 		$(this).removeClass('box-filled-1');
 		$(this).removeClass('box-filled-2');
+		$(this).removeClass('taken');
 	})
 });
